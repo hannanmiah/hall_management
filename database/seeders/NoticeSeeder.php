@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Notice;
 use Illuminate\Database\Seeder;
 
 class NoticeSeeder extends Seeder
@@ -12,6 +12,6 @@ class NoticeSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Notice::factory()->count(100)->create();
     }
 }

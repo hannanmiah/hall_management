@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Profile;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Profile>
+ * @extends Factory<Profile>
  */
 class ProfileFactory extends Factory
 {
@@ -17,7 +18,23 @@ class ProfileFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'student_id' => 1, // 'student_id' => Student::factory()->create()->id,
+            'fathers_name' => $this->faker->name,
+            'mothers_name' => $this->faker->name,
+            'district' => $this->faker->city,
+            'upazila' => $this->faker->city,
+            'union' => $this->faker->city,
+            'village' => $this->faker->city,
+            'post_office' => $this->faker->city,
+            'post_code' => $this->faker->postcode,
+            'nid' => $this->faker->postcode,
+            'phone' => $this->faker->phoneNumber,
+            'photo' => $this->faker->imageUrl(),
+            'signature' => $this->faker->imageUrl(),
+            'nationality' => $this->faker->country,
+            'religion' => $this->faker->country,
+            'guardian_name' => $this->faker->name,
+            'guardian_phone' => $this->faker->phoneNumber,
         ];
     }
 }
