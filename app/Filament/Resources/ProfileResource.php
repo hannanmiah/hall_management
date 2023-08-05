@@ -10,26 +10,20 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ProfileResource extends Resource
 {
     protected static ?string $model = Profile::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-document';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('student_id')
-                    ->relationship('student', 'id')
+                    ->relationship('student', 'full_name')
                     ->required(),
-                Forms\Components\TextInput::make('uuid')
-                    ->label('UUID')
-                    ->required()
-                    ->maxLength(36),
                 Forms\Components\TextInput::make('fathers_name')
                     ->required()
                     ->maxLength(255),
@@ -74,12 +68,9 @@ class ProfileResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('student.id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('student.full_name')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('uuid')
-                    ->label('UUID')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('fathers_name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('mothers_name')
@@ -136,14 +127,14 @@ class ProfileResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -151,5 +142,5 @@ class ProfileResource extends Resource
             'create' => Pages\CreateProfile::route('/create'),
             'edit' => Pages\EditProfile::route('/{record}/edit'),
         ];
-    }    
+    }
 }

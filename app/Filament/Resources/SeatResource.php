@@ -10,23 +10,17 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SeatResource extends Resource
 {
     protected static ?string $model = Seat::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-queue-list';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('uuid')
-                    ->label('UUID')
-                    ->required()
-                    ->maxLength(36),
                 Forms\Components\Select::make('student_id')
                     ->relationship('student', 'id'),
                 Forms\Components\TextInput::make('name')
@@ -42,11 +36,8 @@ class SeatResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('uuid')
-                    ->label('UUID')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('student.id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('student.full_name')
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
@@ -76,14 +67,14 @@ class SeatResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -91,5 +82,5 @@ class SeatResource extends Resource
             'create' => Pages\CreateSeat::route('/create'),
             'edit' => Pages\EditSeat::route('/{record}/edit'),
         ];
-    }    
+    }
 }
