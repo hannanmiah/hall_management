@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SeatResource\Pages;
-use App\Filament\Resources\SeatResource\RelationManagers;
 use App\Models\Seat;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -15,19 +14,22 @@ class SeatResource extends Resource
 {
     protected static ?string $model = Seat::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-queue-list';
+    protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
+
+    protected static ?int $navigationSort = 4;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('student_id')
-                    ->relationship('student', 'id'),
+                    ->relationship('student', 'id')->nullable(),
+                Forms\Components\Select::make('room_id')
+                    ->relationship('room', 'id')
+                    ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('room_no')
-                    ->required()
+                    ->unique(ignoreRecord: true)
                     ->maxLength(255),
             ]);
     }
@@ -37,20 +39,27 @@ class SeatResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('student.full_name')
-                    ->searchable()
-                    ->sortable(),
+                    ->badge(fn ($state) => $state === 'N/A')
+                    ->color(fn (string $state) => match ($state) {
+                        'N/A' => 'danger',
+                        default => 'grey',
+                    })
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('room_no')
+                Tables\Columns\TextColumn::make('room.name')
+                    ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (string $state) => match ($state) {
+                        'Allocated' => 'success',
+                        'Unallocated' => 'danger',
+                        default => 'warning',
+                    }),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->date()
+                    ->sortable(),
             ])
             ->filters([
                 //

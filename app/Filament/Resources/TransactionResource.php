@@ -2,8 +2,9 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\Casts\TransactionName;
+use App\Enums\Casts\TransactionStatus;
 use App\Filament\Resources\TransactionResource\Pages;
-use App\Filament\Resources\TransactionResource\RelationManagers;
 use App\Models\Transaction;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -17,27 +18,33 @@ class TransactionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
 
+    protected static ?int $navigationSort = 4;
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('user_id')
+                    ->label('User')
+                    ->placeholder('Select User')
                     ->relationship('user', 'name')
                     ->required(),
-                Forms\Components\TextInput::make('name')
+                Forms\Components\Select::make('name')
                     ->required()
-                    ->maxLength(255),
+                    ->enum(TransactionName::class)
+                    ->options(TransactionName::class)->live(onBlur: true),
                 Forms\Components\TextInput::make('amount')
                     ->required()
                     ->numeric(),
                 Forms\Components\TextInput::make('method')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('reference')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('status')
+                Forms\Components\DatePicker::make('reference')
+                    ->visible(fn (Forms\Get $get): bool => filled($get('name')) && $get('name') === 'fee')
+                    ->required(fn (Forms\Get $get): bool => filled($get('name')) && $get('name') === 'fee'),
+                Forms\Components\Select::make('status')
+                    ->options(TransactionStatus::class)
                     ->required()
-                    ->maxLength(255)
-                    ->default('pending'),
+                    ->enum(TransactionStatus::class),
                 Forms\Components\Textarea::make('description')
                     ->maxLength(65535)
                     ->columnSpanFull(),
@@ -55,18 +62,21 @@ class TransactionResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('amount')
                     ->numeric()
+                    ->money('bdt')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('method')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('reference')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (TransactionStatus $state) => match ($state) {
+                        TransactionStatus::DEBITED => 'danger',
+                        TransactionStatus::CREDITED => 'primary',
+                        default => 'warning',
+                    })
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

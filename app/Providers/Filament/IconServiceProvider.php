@@ -13,8 +13,8 @@ class IconServiceProvider extends ServiceProvider
     public function boot(): void
     {
         FilamentIcon::register([
-            'panels::sidebar.collapse-button' => 'heroicon-o-chevron-double-left',
-            'panels::sidebar.expand-button' => 'heroicon-o-chevron-double-right',
+            'panels::sidebar.collapse-button' => 'heroicon-o-bars-4',
+            'panels::sidebar.expand-button' => 'heroicon-o-bars-3',
         ]);
     }
 

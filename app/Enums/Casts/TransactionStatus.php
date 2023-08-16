@@ -2,7 +2,9 @@
 
 namespace App\Enums\Casts;
 
-enum TransactionStatus: string
+use Filament\Support\Contracts\HasLabel;
+
+enum TransactionStatus: string implements HasLabel
 {
     case PENDING = 'pending';
     case DEBITED = 'debited';
@@ -11,21 +13,19 @@ enum TransactionStatus: string
     public static function toArray(): array
     {
         $values = [];
-
-        foreach (self::getValues() as $value) {
-            $values[$value] = $value;
+        foreach (self::cases() as $value) {
+            $values[$value->value] = $value->name;
         }
 
         return $values;
     }
 
-    public static function getValues(): array
+    public function getLabel(): ?string
     {
-        return [
-            self::PENDING,
-            self::DEBITED,
-            self::CREDITED,
-        ];
+        return match ($this) {
+            self::PENDING => 'Pending',
+            self::DEBITED => 'Debited',
+            self::CREDITED => 'Credited',
+        };
     }
-
 }

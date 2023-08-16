@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Seat;
+use App\Models\Room;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Seat>
+ * @extends Factory<Room>
  */
-class SeatFactory extends Factory
+class RoomFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,9 +18,8 @@ class SeatFactory extends Factory
     public function definition(): array
     {
         return [
-            'student_id' => null,
-            'room_id' => $this->faker->numberBetween(1, 25),
             'name' => $this->faker->word.'-'.$this->faker->randomNumber(3),
+            'capacity' => 5,
         ];
     }
 }

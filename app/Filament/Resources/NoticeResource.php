@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\NoticeResource\Pages;
-use App\Filament\Resources\NoticeResource\RelationManagers;
 use App\Models\Notice;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -16,6 +15,8 @@ class NoticeResource extends Resource
     protected static ?string $model = Notice::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
+
+    protected static ?int $navigationSort = 5;
 
     public static function form(Form $form): Form
     {

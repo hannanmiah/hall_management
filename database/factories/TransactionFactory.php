@@ -19,10 +19,10 @@ class TransactionFactory extends Factory
     {
         return [
             'user_id' => 1,
-            'name' => $this->faker->word,
+            'name' => $this->faker->randomElement(['fee', 'expense', 'other']),
             'amount' => $this->faker->numberBetween(100, 100000),
-            'method' => $this->faker->randomElement(['card', 'bank']),
-            'reference' => $this->faker->uuid,
+            'method' => $this->faker->randomElement(['card', 'bank', 'cash']),
+            'reference' => $this->faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d'),
             'status' => $this->faker->randomElement(['pending', 'credited', 'debited']),
             'description' => $this->faker->sentence,
         ];

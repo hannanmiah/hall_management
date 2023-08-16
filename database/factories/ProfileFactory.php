@@ -18,7 +18,8 @@ class ProfileFactory extends Factory
     public function definition(): array
     {
         return [
-            'student_id' => 1, // 'student_id' => Student::factory()->create()->id,
+            'student_id' => $this->faker->numberBetween(1, 25),
+            'date_of_birth' => $this->faker->date(),
             'fathers_name' => $this->faker->name,
             'mothers_name' => $this->faker->name,
             'district' => $this->faker->city,
@@ -27,7 +28,7 @@ class ProfileFactory extends Factory
             'village' => $this->faker->city,
             'post_office' => $this->faker->city,
             'post_code' => $this->faker->postcode,
-            'nid' => $this->faker->postcode,
+            'nid' => $this->faker->numberBetween(10000000, 99999999),
             'phone' => $this->faker->phoneNumber,
             'photo' => $this->faker->imageUrl(),
             'signature' => $this->faker->imageUrl(),
