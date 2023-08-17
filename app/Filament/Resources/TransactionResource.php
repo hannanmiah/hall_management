@@ -59,6 +59,7 @@ class TransactionResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
+                    ->badge()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('amount')
                     ->numeric()
@@ -76,16 +77,20 @@ class TransactionResource extends Resource
                         default => 'warning',
                     })
                     ->searchable(),
+                Tables\Columns\TextColumn::make('description')
+                    ->limit(20)
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->date()
+                    ->sortable(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->options(TransactionStatus::toArray()),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

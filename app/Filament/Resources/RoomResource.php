@@ -40,6 +40,7 @@ class RoomResource extends Resource
                 Tables\Columns\TextColumn::make('capacity')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('seats_count')->counts('seats')->badge(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->date()
                     ->sortable(),

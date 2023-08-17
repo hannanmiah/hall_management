@@ -13,7 +13,7 @@ class Room extends Model
 
     protected $hidden = ['id'];
 
-    public function seat(): HasMany
+    public function seats(): HasMany
     {
         return $this->hasMany(Seat::class);
     }
