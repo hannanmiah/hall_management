@@ -41,6 +41,9 @@ class TransactionResource extends Resource
                 Forms\Components\DatePicker::make('reference')
                     ->visible(fn (Forms\Get $get): bool => filled($get('name')) && $get('name') === 'fee')
                     ->required(fn (Forms\Get $get): bool => filled($get('name')) && $get('name') === 'fee'),
+                Forms\Components\TextInput::make('reference')
+                    ->visible(fn (Forms\Get $get): bool => filled($get('name')) && $get('name') !== 'fee')
+                    ->required(fn (Forms\Get $get): bool => filled($get('name')) && $get('name') !== 'fee'),
                 Forms\Components\Select::make('status')
                     ->options(TransactionStatus::class)
                     ->required()

@@ -3,7 +3,9 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SeatResource\Pages;
+use App\Models\Room;
 use App\Models\Seat;
+use App\Models\Student;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -23,9 +25,32 @@ class SeatResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('student_id')
-                    ->relationship('student', 'id')->nullable(),
+                    ->label('Student')
+                    ->placeholder('Select Student')
+                    ->options(function () use ($form) {
+                        $students = Student::query()->whereDoesntHave('seat')->get();
+
+                        $students = $students->pluck('full_name', 'id');
+                        if ($form->getRecord()?->exists && filled($form->getRecord()?->student)) {
+                            $students->prepend($form->getRecord()->student->full_name, $form->getRecord()->student->id);
+                        }
+
+                        return $students;
+                    })
+                    ->nullable(),
                 Forms\Components\Select::make('room_id')
-                    ->relationship('room', 'id')
+                    ->label('Room')
+                    ->placeholder('Select Room')
+                    ->options(function () use ($form) {
+                        $rooms = Room::query()->with('seats')->select(['id', 'name', 'capacity'])->get();
+
+                        $rooms = $rooms->where('remaining', '>', 0)->pluck('name', 'id');
+                        if ($form->getRecord()?->exists && filled($form->getRecord()?->room)) {
+                            $rooms->prepend($form->getRecord()->room->name, $form->getRecord()->room->id);
+                        }
+
+                        return $rooms;
+                    })
                     ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
